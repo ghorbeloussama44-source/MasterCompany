@@ -102,7 +102,7 @@ html.no-js-smooth #smooth{position:relative}
 .work--flip .work__media{grid-column:7/span 6;grid-row:1}
 .work--flip .work__text{grid-column:1/span 5;grid-row:1}
 .work__no{display:block;font-family:var(--display);font-weight:800;font-size:14px;color:var(--acc);letter-spacing:.1em;margin-bottom:3vh}
-.work h3{font-family:var(--display);font-weight:800;overflow-wrap:anywhere;font-size:clamp(26px,3.5vw,58px);line-height:.98;letter-spacing:-.03em;text-transform:uppercase;margin-bottom:3vh}
+.work h3{font-family:var(--display);font-weight:800;font-size:clamp(24px,3.1vw,54px);line-height:.98;letter-spacing:-.03em;text-transform:uppercase;margin-bottom:3vh}
 .work p{color:var(--mute);max-width:30em;margin-bottom:4vh}
 .pill{display:inline-block;padding:15px 30px;border:1px solid rgba(242,239,233,.4);border-radius:99px;text-transform:uppercase;letter-spacing:.14em;font-size:12px;position:relative;overflow:hidden;transition:color .5s var(--ease),border-color .5s;background:none;color:var(--fg);font-family:var(--text);will-change:transform}
 .pill::before{content:"";position:absolute;inset:0;background:var(--fg);transform:translateY(101%);transition:transform .6s var(--ease);z-index:-1;border-radius:inherit}
