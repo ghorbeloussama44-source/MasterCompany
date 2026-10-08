@@ -85,6 +85,9 @@
         texture2D(uTex, c + vec2(sp, 0.)).r,
         texture2D(uTex, c).g,
         texture2D(uTex, c - vec2(sp, 0.)).b);
+      vec2 px = vec2(1.) / (uPlane * 2.0);
+      vec3 blur = (texture2D(uTex, c + vec2(px.x, 0.)).rgb + texture2D(uTex, c - vec2(px.x, 0.)).rgb + texture2D(uTex, c + vec2(0., px.y)).rgb + texture2D(uTex, c - vec2(0., px.y)).rgb) * .25;
+      col = clamp(col + (col - blur) * .55, 0., 1.);
       col *= uDim > 0. ? (1. - uDim) + .15 : 1.;
       col *= 1. + uHover * .08;
       gl_FragColor = vec4(col, a);
@@ -144,7 +147,8 @@
       const img = $('img', el);
       const url = img.currentSrc || img.src;
       gl.loader.load(url, tex => {
-        tex.minFilter = THREE.LinearFilter; tex.generateMipmaps = false;
+        tex.generateMipmaps = true; tex.minFilter = THREE.LinearMipmapLinearFilter; tex.magFilter = THREE.LinearFilter;
+        tex.anisotropy = gl.renderer.capabilities.getMaxAnisotropy();
         const mat = new THREE.ShaderMaterial({
           vertexShader: VERT, fragmentShader: FRAG_IMG, transparent: true,
           uniforms: {
