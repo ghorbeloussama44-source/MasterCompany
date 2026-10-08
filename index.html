@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Masters Company — Agence de communication internationale</title>
+  <meta name="description" content="Masters Company, agence de communication internationale à Tunis : création de sites web, référencement, stratégie digitale, identité de marque, vidéo et intelligence artificielle.">
+  <meta name="theme-color" content="#050506">
+  <link rel="shortcut icon" href="assets/images/1-2.gif" type="image/x-icon">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500&family=Syne:wght@600;800&display=swap">
+  <link rel="stylesheet" href="css/site.css">
+</head>
+<body>
+
+<div class="loader" id="loader" aria-hidden="true">
+  <div class="loader__count"><span id="loaderCount">0</span><i>%</i></div>
+  <div class="loader__label">Masters Company</div>
+</div>
+
+<canvas id="gl" aria-hidden="true"></canvas>
+<div class="grain" aria-hidden="true"></div>
+<div class="cursor" id="cursor" aria-hidden="true"><span id="cursorLabel"></span></div>
+<div class="progress" id="progress" aria-hidden="true"></div>
+
+<header class="nav">
+  <a class="nav__logo" href="#top" data-cursor="hover">MASTERS<sup>©</sup></a>
+  <nav class="nav__links">
+    <a href="#services" data-cursor="hover">Expertises</a>
+    <a href="#contact" data-cursor="hover">Contact</a>
+  </nav>
+</header>
+
+<main id="smooth">
+
+  <!-- HERO -->
+  <section class="hero" id="top">
+    <div class="hero__media media" data-gl data-dim="0.5" data-ratio="cover">
+      <img src="assets/images/agence-web-tunisie-creation-site-web-tunisie-2000x1197-85.jpg" alt="">
+    </div>
+    <div class="hero__inner">
+      <p class="hero__kicker" data-reveal>Agence de communication internationale — Tunis</p>
+      <h1 class="hero__title" aria-label="Masters Company">
+        <span class="line" data-chars data-speed="0.06">Masters</span>
+        <span class="line line--outline" data-chars data-speed="0.12">Company</span>
+      </h1>
+      <div class="hero__foot">
+        <p data-reveal>Solutions optimales. Créativité appliquée à tous les médias.</p>
+        <a class="scroll-cue" href="#manifesto" data-cursor="hover"><span></span>Scroll</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- MANIFESTO -->
+  <section class="manifesto" id="manifesto">
+    <p class="manifesto__label" data-reveal>( Manifeste )</p>
+    <p class="manifesto__text" data-scrub>Masters Company vous apporte des solutions optimales dans votre business par une créativité appliquée à tous les médias, pour provoquer une émotion pertinente qui change les comportements et les visions de vos collaborateurs et des consommateurs.</p>
+  </section>
+
+  <!-- MARQUEE -->
+  <section class="marquee" aria-hidden="true">
+    <div class="marquee__track" id="marquee">
+      <span>Think for all</span><span>Think smart</span><span>Think leader</span><span>Think tomorrow</span><span>Think partner</span>
+      <span>Think for all</span><span>Think smart</span><span>Think leader</span><span>Think tomorrow</span><span>Think partner</span>
+    </div>
+  </section>
+
+  <!-- SERVICES -->
+  <section class="services" id="services">
+    <header class="section-head">
+      <p data-reveal>( Expertises )</p>
+      <h2 data-split>Tous les outils de communication, clé en main.</h2>
+    </header>
+
+    <article class="work">
+      <div class="work__media" data-speed="-0.04"><div class="media r-45" data-gl><img src="assets/images/agence-web-tunisie-creation-site-web-tunisie-1400x808-68.png" alt="Référencement et design web"></div></div>
+      <div class="work__text" data-speed="0.05">
+        <span class="work__no">01</span>
+        <h3 data-split>Agence digitale web</h3>
+        <p data-reveal>Notre agence vous aide à réaliser vos projets web avec un design et un référencement spécifiques, en fonction de vos objectifs et de votre budget.</p>
+        <a class="pill" href="#contact" data-cursor="hover" data-magnetic>Référencement Tunisie</a>
+      </div>
+    </article>
+
+    <article class="work work--flip">
+      <div class="work__media" data-speed="-0.06"><div class="media r-54" data-gl><img src="assets/images/agence-web-tunisie-creation-site-web-tunisie-1400x1166-36.jpg" alt="Site web dynamique"></div></div>
+      <div class="work__text" data-speed="0.05">
+        <span class="work__no">02</span>
+        <h3 data-split>Site web, personnalisation totale</h3>
+        <p data-reveal>Sites 100&nbsp;% dynamiques&nbsp;: vitrine, e-catalogue, e-commerce. Des sites personnalisés, optimisés et référencés sur les moteurs de recherche.</p>
+        <a class="pill" href="#contact" data-cursor="hover" data-magnetic>Créer mon site</a>
+      </div>
+    </article>
+
+    <article class="work">
+      <div class="work__media" data-speed="-0.05"><div class="media r-45" data-gl><img src="assets/images/agence-web-tunisie-creation-site-web-tunisie-1400x1539-81.png" alt="Algorithme Google"></div></div>
+      <div class="work__text" data-speed="0.07">
+        <span class="work__no">03</span>
+        <h3 data-split>Algorithme Google</h3>
+        <p data-reveal>Nos ingénieurs sont des spécialistes du référencement&nbsp;: profitez de leurs compétences pour le bien de votre société.</p>
+        <a class="pill" href="#contact" data-cursor="hover" data-magnetic>Think smart</a>
+      </div>
+    </article>
+
+    <article class="work work--flip">
+      <div class="work__media" data-speed="-0.04"><div class="media r-169" data-gl><img src="assets/images/agence-web-tunisie-creation-site-web-tunisie-1400x545-86.jpg" alt="Recherche et stratégie"></div></div>
+      <div class="work__text" data-speed="0.05">
+        <span class="work__no">04</span>
+        <h3 data-split>Recherche &amp; Stratégie</h3>
+        <p data-reveal>Un process de conception pour identifier le territoire d'expression potentiel et les champs d'application globaux vers vos différentes cibles.</p>
+        <a class="pill" href="#contact" data-cursor="hover" data-magnetic>Think leader</a>
+      </div>
+    </article>
+
+    <article class="work">
+      <div class="work__media" data-speed="-0.05"><div class="media r-45" data-gif><img src="assets/images/agence-web-tunisie-creation-site-web-tunisie.8.gif" alt="Communication" loading="lazy"></div></div>
+      <div class="work__text" data-speed="0.05">
+        <span class="work__no">05</span>
+        <h3 data-split>Communication</h3>
+        <p data-reveal>Faire rayonner la meilleure idée et mettre en lumière la richesse de votre marque, de vos produits et services&nbsp;: presse, affichage, radio, TV, vidéo et réseaux sociaux.</p>
+        <a class="pill" href="#contact" data-cursor="hover" data-magnetic>Croissance</a>
+      </div>
+    </article>
+
+    <article class="work work--flip">
+      <div class="work__media" data-speed="-0.06"><div class="media r-169" data-gl><img src="assets/images/agence-web-tunisie-creation-site-web-tunisie-1400x787-78.jpg" alt="Identité de marque"></div></div>
+      <div class="work__text" data-speed="0.05">
+        <span class="work__no">06</span>
+        <h3 data-split>Identité de marque</h3>
+        <p data-reveal>Votre marque est importante et multi-canal. Nous créons un langage unique pour raconter son histoire.</p>
+        <a class="pill" href="#contact" data-cursor="hover" data-magnetic>Publicité internationale</a>
+      </div>
+    </article>
+
+    <article class="work">
+      <div class="work__media" data-speed="-0.04"><div class="media r-54" data-gif><img src="assets/images/agence-web-tunisie-creation-site-web-tunisie.10.gif" alt="Intelligence artificielle" loading="lazy"></div></div>
+      <div class="work__text" data-speed="0.06">
+        <span class="work__no">07</span>
+        <h3 data-split>Intelligence artificielle</h3>
+        <p data-reveal>Imaginer une interaction intelligente.</p>
+        <a class="pill" href="#contact" data-cursor="hover" data-magnetic>Intelligence</a>
+      </div>
+    </article>
+
+    <article class="work work--flip">
+      <div class="work__media" data-speed="-0.05"><div class="media r-45" data-gif><img src="assets/images/agence-web-tunisie-creation-site-web-tunisie.12.gif" alt="Édition" loading="lazy"></div></div>
+      <div class="work__text" data-speed="0.05">
+        <span class="work__no">08</span>
+        <h3 data-split>Édition</h3>
+        <p data-reveal>Créer du lien, donner du sens en interne et vers vos publics, de la ligne éditoriale à la fabrication du support.</p>
+        <a class="pill" href="#contact" data-cursor="hover" data-magnetic>Business card</a>
+      </div>
+    </article>
+
+    <article class="work">
+      <div class="work__media" data-speed="-0.05"><div class="media r-45" data-gl><img src="assets/images/agence-web-tunisie-creation-site-web-tunisie-1400x1533-73.png" alt="Stratégie marketing"></div></div>
+      <div class="work__text" data-speed="0.06">
+        <span class="work__no">09</span>
+        <h3 data-split>Stratégie marketing</h3>
+        <p data-reveal>Vous cherchez de nouvelles opportunités et de nouveaux horizons&nbsp;? Le conseil et le développement de votre stratégie marketing sont notre spécialité.</p>
+        <a class="pill" href="#contact" data-cursor="hover" data-magnetic>Veille stratégique</a>
+      </div>
+    </article>
+  </section>
+
+  <!-- SHOWCASE -->
+  <section class="showcase">
+    <div class="showcase__media media" data-gl data-dim="0.8"><img src="assets/images/agence-web-tunisie-creation-site-web-tunisie-1400x1011-59.jpg" alt=""></div>
+    <div class="showcase__text" data-speed="0.1">
+      <p data-reveal>( Style moderne )</p>
+      <h2 data-split>Parce que nous sommes dans un monde concurrentiel, nous travaillons soigneusement sur des sites à la page.</h2>
+      <a class="pill" href="#contact" data-cursor="hover" data-magnetic>Think tomorrow</a>
+    </div>
+  </section>
+
+  <!-- PARTNER -->
+  <section class="partner">
+    <p data-reveal>( Partenaire &amp; client )</p>
+    <h2 data-split>Votre réussite est la nôtre.</h2>
+    <p class="partner__sub" data-reveal>Vous cherchez un partenaire ou un client&nbsp;? Nous vous offrons nos solutions les plus efficaces pour parvenir à vos attentes.</p>
+  </section>
+
+  <!-- CONTACT -->
+  <section class="contact" id="contact">
+    <h2 class="contact__title" data-split>Parlons<br>de votre projet</h2>
+    <div class="contact__grid">
+      <div class="contact__info" data-reveal>
+        <p class="label">Email</p>
+        <a href="mailto:direction@masters.tn" data-cursor="hover">direction@masters.tn</a>
+        <p class="label">Téléphone</p>
+        <a href="tel:+97896111" data-cursor="hover">+ 97 896 111</a>
+        <p class="label">Adresse</p>
+        <p>Alain Savary<br>Tunis 1002</p>
+      </div>
+      <form class="form" id="form" action="mailto:direction@masters.tn" method="post" enctype="text/plain" data-reveal>
+        <label><span>Nom*</span><input type="text" name="name" required autocomplete="name"></label>
+        <label><span>Email*</span><input type="email" name="email" required autocomplete="email"></label>
+        <label><span>Téléphone</span><input type="tel" name="phone" autocomplete="tel"></label>
+        <label><span>Message</span><textarea name="message" rows="3"></textarea></label>
+        <button class="pill pill--solid" type="submit" data-cursor="hover" data-magnetic>Envoyer</button>
+        <p class="form__ok" id="formOk" hidden>Merci&nbsp;! Votre message est prêt à être envoyé.</p>
+      </form>
+    </div>
+    <footer class="foot">
+      <span>© 2026 Masters Company</span>
+      <a href="#top" data-cursor="hover">Retour en haut ↑</a>
+    </footer>
+  </section>
+
+</main>
+
+<script src="js/vendor/three.min.js"></script>
+<script src="js/site.js"></script>
+</body>
+</html>
