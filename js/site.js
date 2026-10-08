@@ -119,6 +119,146 @@
       gl_FragColor = vec4(col, 1.);
     }`;
 
+
+  /* ---------- procedural scenes (resolution-independent, always sharp) ---------- */
+  const SCENE_HEAD = `
+    precision highp float;
+    varying vec2 vUv;
+    uniform vec2 uPlane, uMouse;
+    uniform float uPar, uHover, uTime, uVel, uReveal, uDim;
+    #define PI 3.14159265
+    const vec3 INK = vec3(.02, .02, .03), RED = vec3(1., .29, .17), BLUE = vec3(.18, .25, .95), CREAM = vec3(.95, .93, .88), VIOLET = vec3(.55, .2, .8);
+    float hash(vec2 p){ return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453); }
+    vec2 hash2(vec2 p){ return fract(sin(vec2(dot(p, vec2(127.1, 311.7)), dot(p, vec2(269.5, 183.3)))) * 43758.5453); }
+    float vn(vec2 p){ vec2 i = floor(p), f = fract(p); f = f*f*(3.-2.*f);
+      return mix(mix(hash(i), hash(i+vec2(1,0)), f.x), mix(hash(i+vec2(0,1)), hash(i+vec2(1,1)), f.x), f.y); }
+    float fbm(vec2 p){ float v = 0., a = .5; for(int i=0;i<5;i++){ v += a*vn(p); p = p*2.03 + 5.7; a *= .5; } return v; }
+    vec3 pal(float t){ t = clamp(t, 0., 1.); return t < .5 ? mix(BLUE, VIOLET, t*2.) : mix(VIOLET, RED, t*2. - 1.); }
+    float lines(float v, float w){ float d = abs(fract(v - .5) - .5); float fw = fwidth(v) + 1e-5; return 1. - smoothstep(w*fw, w*fw + fw*1.4, d); }
+    float disc(float d, float r){ float fw = fwidth(d) + 1e-5; return 1. - smoothstep(r - fw, r + fw, d); }
+  `;
+  const SCENES = [
+    // 0 — topographic contours
+    `vec3 scene(vec2 p, vec2 m, float t){
+      p = p * 2.4; p += (m - p * .0) * .0;
+      float f = fbm(p + vec2(t * .06, -t * .04) + (m * 2.4 - p) * .06 * smoothstep(1.5, 0., length(p - m * 2.4)));
+      vec3 c = mix(INK, pal(f) * .35, smoothstep(.25, .8, f));
+      c += lines(f * 18., 1.) * mix(pal(f + .15), CREAM, .35);
+      c += lines(f * 3.6, 1.6) * CREAM * .35;
+      return c; }`,
+    // 1 — warped halftone dots
+    `vec3 scene(vec2 p, vec2 m, float t){
+      vec2 q = p * 13.;
+      q += vec2(fbm(p * 3. + t * .2), fbm(p * 3. - t * .2 + 4.)) * 2.2;
+      vec2 id = floor(q), f = fract(q) - .5;
+      float w = .5 + .5 * sin(length(id / 13. - m) * 9. - t * 2.2 + fbm(id * .1) * 6.);
+      float r = .08 + .4 * w;
+      float d = disc(length(f), r);
+      return mix(INK, pal(w + id.y * .01), d) + CREAM * d * .12 * w; }`,
+    // 2 — interference rings
+    `vec3 scene(vec2 p, vec2 m, float t){
+      vec2 a = vec2(sin(t * .3), cos(t * .23)) * .32, b = vec2(cos(t * .27 + 2.), sin(t * .31)) * .32;
+      float v1 = length(p - a) * 22., v2 = length(p - b) * 22., v3 = length(p - m) * 22.;
+      float f = lines(v1, 1.) + lines(v2, 1.) + lines(v3 - t * .6, 1.2);
+      float mo = .5 + .5 * sin(v1 - v2);
+      vec3 c = mix(INK, pal(mo) * .28, mo);
+      return c + f * mix(CREAM, pal(mo + .3), .55); }`,
+    // 3 — animated voronoi
+    `vec3 scene(vec2 p, vec2 m, float t){
+      vec2 q = p * 4.5, ip = floor(q), fp = fract(q);
+      float md = 8.; vec2 mid = vec2(0.); vec2 mr = vec2(0.);
+      for(int j=-1;j<=1;j++) for(int i=-1;i<=1;i++){
+        vec2 g = vec2(float(i), float(j)); vec2 o = hash2(ip + g);
+        o = .5 + .5 * sin(t * .6 + 6.2831 * o);
+        vec2 r = g + o - fp; float d = dot(r, r);
+        if(d < md){ md = d; mid = ip + g; mr = r; } }
+      float ed = 8.;
+      for(int j=-2;j<=2;j++) for(int i=-2;i<=2;i++){
+        vec2 g = vec2(float(i), float(j)); vec2 o = hash2(ip + g);
+        o = .5 + .5 * sin(t * .6 + 6.2831 * o);
+        vec2 r = g + o - fp;
+        if(dot(mr - r, mr - r) > .00001) ed = min(ed, dot(.5 * (mr + r), normalize(r - mr))); }
+      float h0 = hash(mid);
+      vec3 c = mix(INK, pal(h0) * .5, .35 + .65 * h0 * .6);
+      float e = 1. - smoothstep(.0, fwidth(ed) * 1.6 + .001, ed);
+      c = mix(c, CREAM, e * .9) + disc(sqrt(md), .06) * RED;
+      return c; }`,
+    // 4 — metaballs with iso lines
+    `vec3 scene(vec2 p, vec2 m, float t){
+      float f = 0.;
+      for(int i=0;i<6;i++){ float fi = float(i);
+        vec2 c = vec2(sin(t * (.2 + fi * .07) + fi * 2.1), cos(t * (.17 + fi * .05) + fi * 1.3)) * vec2(.4, .36);
+        f += .012 / (dot(p - c, p - c) + .004); }
+      f += .02 / (dot(p - m, p - m) + .004);
+      float v = log(f + 1.) * 3.5;
+      vec3 c = mix(INK, pal(v * .3) * .85, smoothstep(.6, 2.4, v));
+      c += lines(v * 2.2, 1.) * CREAM * .5 * smoothstep(.3, 1., v);
+      c += CREAM * smoothstep(3.1, 3.6, v) * .7;
+      return c; }`,
+    // 5 — sine bands
+    `vec3 scene(vec2 p, vec2 m, float t){
+      vec3 c = INK;
+      for(int i=0;i<3;i++){ float fi = float(i);
+        float y = p.y * 14. + sin(p.x * (3. + fi) + t * (.5 + fi * .2) + fi) * (1.1 + .5 * sin(t * .3 + fi)) + (m.x - p.x) * (m.y - .0) * .4;
+        float l = lines(y, 1.3 + fi * .4);
+        c += l * (i == 0 ? RED : (i == 1 ? BLUE * 1.4 : CREAM * .75)) * (.55 + .45 * sin(p.x * 4. + t + fi));
+      }
+      c += pal(p.x + .5) * .08;
+      return c; }`,
+    // 6 — polar tunnel
+    `vec3 scene(vec2 p, vec2 m, float t){
+      p -= m * .3;
+      float r = length(p) + 1e-3, a = atan(p.y, p.x);
+      float z = .35 / r + t * .5;
+      float rad = lines(z * 3., 1.2);
+      float spk = lines(a * 6. / PI + sin(z) * .3, 1.);
+      float chk = step(.5, fract(floor(z * 3.) * .5 + floor(a * 6. / PI + .5) * .5));
+      vec3 c = mix(INK, pal(z * .1 + a * .05) * .35, chk);
+      c += (rad + spk * .6) * mix(CREAM, RED, .4);
+      return c * smoothstep(.0, .22, r) ; }`,
+    // 7 — moire gratings
+    `vec3 scene(vec2 p, vec2 m, float t){
+      float a1 = t * .06 + m.x * .5, a2 = -t * .05 + m.y * .5 + .35;
+      vec2 d1 = vec2(cos(a1), sin(a1)), d2 = vec2(cos(a2), sin(a2));
+      float s = 36. + 6. * sin(t * .3);
+      float l1 = lines(dot(p, d1) * s + sin(dot(p, d2) * 3. + t) * .8, 1.1);
+      float l2 = lines(dot(p, d2) * s, 1.1);
+      float l3 = lines(length(p) * 30. - t, 1.);
+      vec3 c = INK + l1 * BLUE * 1.1 + l2 * RED * 1.0 + l3 * CREAM * .25;
+      c += (l1 * l2) * CREAM;
+      return c; }`,
+    // 8 — neon strands
+    `vec3 scene(vec2 p, vec2 m, float t){
+      vec3 c = INK; float g = 0.;
+      for(int i=0;i<36;i++){ float fi = float(i);
+        float y = sin(p.x * (1.6 + fi * .09) + t * (.28 + fi * .012) + fi * .7) * (.16 + .1 * sin(fi + t * .2));
+        y += (m.y - .0) * .12 * sin(p.x * 2. + fi);
+        float d = abs(p.y - y + (fi - 18.) * .012);
+        float glow = .00035 / (d * d + .00035);
+        float fall = .35 + .65 * exp(-abs(p.x - m.x) * 1.2);
+        g += glow * .05 * fall;
+        c += pal(fi / 36. + p.x * .25 + .1) * glow * .16 * fall;
+      }
+      return c + CREAM * g; }`
+  ];
+  const SCENE_MAIN = `
+    void main(){
+      vec2 asp = vec2(uPlane.x / uPlane.y, 1.);
+      vec2 uv = vUv;
+      vec2 dv = (uv - uMouse) * asp; float d = length(dv);
+      uv += normalize(dv + 1e-4) * sin(d * 24. - uTime * 3.) * smoothstep(.5, 0., d) * uHover * .01;
+      vec2 p = (uv - .5) * asp;
+      p.y += uPar * .06;
+      vec2 m = (uMouse - .5) * asp;
+      float edge = uReveal * 1.3 - .15 + sin(vUv.x * 6. + uTime) * .03;
+      float a = smoothstep(vUv.y - .12, vUv.y, edge);
+      vec3 col = scene(p * mix(1.35, 1., uReveal), m, uTime);
+      col *= uDim > 0. ? (1. - uDim) + .15 : 1.;
+      col *= 1. - .35 * smoothstep(.45, .95, length((vUv - .5) * vec2(1.1, 1.3)));
+      col *= 1. + uHover * .12;
+      gl_FragColor = vec4(col, a);
+    }`;
+
   function initGL() {
     if (!window.THREE) throw new Error('three missing');
     const canvas = $('#gl');
@@ -144,6 +284,15 @@
   function loadMedia() {
     if (!gl) return Promise.resolve();
     const jobs = $$('.media[data-gl]').map(el => new Promise(resolve => {
+      if (el.dataset.scene !== undefined) {
+        const mat = new THREE.ShaderMaterial({
+          vertexShader: VERT, fragmentShader: SCENE_HEAD + SCENES[+el.dataset.scene] + SCENE_MAIN, transparent: true,
+          uniforms: { uPlane: { value: new THREE.Vector2(1, 1) }, uMouse: { value: new THREE.Vector2(.5, .5) }, uPar: { value: 0 }, uHover: { value: 0 }, uTime: { value: 0 }, uVel: { value: 0 }, uReveal: { value: 0 }, uDim: { value: parseFloat(el.dataset.dim || 0) } }
+        });
+        const mesh = new THREE.Mesh(gl.geo, mat); mesh.visible = false; gl.scene.add(mesh);
+        items.push({ el, mesh, mat, top: 0, left: 0, w: 1, h: 1, hover: 0, hoverT: 0, reveal: 0, revealT: 0, mx: .5, my: .5, inView: false, isHero: el === heroEl });
+        return resolve();
+      }
       const img = $('img', el);
       const url = img.currentSrc || img.src;
       gl.loader.load(url, tex => {
@@ -321,6 +470,7 @@
 
   /* ---------- boot ---------- */
   try { initGL(); } catch (err) { gl = null; root.classList.remove('gl-on'); }
+  if (!gl) $$('img[data-src]').forEach(i => { i.src = i.dataset.src; });
   const fontsReady = document.fonts && document.fonts.ready ? document.fonts.ready : Promise.resolve();
   const countEl = $('#loaderCount'), loader = $('#loader');
   let shown = 0, targetPct = 8;
